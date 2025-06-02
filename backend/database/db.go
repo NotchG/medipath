@@ -17,7 +17,7 @@ func ConnectDB() *gorm.DB {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
 		// contoh default config lokal PostgreSQL
-		dsn = "host=localhost user=postgres password=postgres dbname=yourdb port=5432 sslmode=disable"
+		dsn = "host=localhost user=postgres password=postgres dbname=medipath_db port=5432 sslmode=disable"
 	}
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
