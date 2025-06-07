@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/NotchG/medipath/backend/model"
+	"github.com/NotchG/medipath/backend/database"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
@@ -34,15 +36,18 @@ func ChatWithAI(c *gin.Context) {
 }
 
 func GetChatHistory(c *gin.Context) {
-	// Simulasi data chat (ganti dengan fetch dari DB nanti)
-	history := []gin.H{
-		{
-			"chat_id":   "uuid-123",
-			"user_id":   "uuid-user",
-			"message":   "Apa itu hipertensi?",
-			"response":  "Hipertensi adalah tekanan darah tinggi...",
-			"timestamp": "2025-06-02T10:00:00Z",
-		},
+	userID := c.Query("user_id") // Ambil user_id dari query string
+
+	if userID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
+		return
 	}
+
+	var history []model.Chat
+	if err := database.DB.Where("user_id = ?", userID).Order("timestamp desc").Find(&history).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch chat history"})
+		return
+	}
+
 	c.JSON(http.StatusOK, history)
 }

@@ -3,7 +3,10 @@ package controller
 import (
 	"net/http"
 
+	"github.com/NotchG/medipath/backend/database"
+	"github.com/NotchG/medipath/backend/model"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Login(c *gin.Context) {
@@ -17,17 +20,22 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Dummy validasi username & password (replace dengan DB query & password hash check)
-	if req.Username == "user" && req.Password == "password" {
-		c.JSON(http.StatusOK, gin.H{
-			"token": "dummy-jwt-token",
-			"user": gin.H{
-				"id":       "uuid-placeholder",
-				"username": req.Username,
-			},
-		})
+	var user model.User
+	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
 
-	c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"token": "123e4567-e89b-12d3-a456-426614174000", // Replace with JWT generator
+		"user": gin.H{
+			"id":       user.ID,
+			"username": user.Username,
+		},
+	})
 }

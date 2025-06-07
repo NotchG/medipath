@@ -32,7 +32,6 @@ func ConnectDB() *gorm.DB {
 func MigrateDB(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&model.User{},
-		&model.Doctor{},
 		&model.Chat{},
 	)
 	if err != nil {

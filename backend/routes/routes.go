@@ -12,9 +12,6 @@ func SetupRoutes(router *gin.Engine) {
 	// Auth
 	api.POST("/login", controller.Login)
 
-	// Doctor
-	api.GET("/doctors", controller.GetDoctors)
-
 	// Chat
 	api.POST("/chat", controller.ChatWithAI)
 	api.GET("/chat/history", controller.GetChatHistory)
