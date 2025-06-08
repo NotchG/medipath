@@ -80,3 +80,27 @@ func UpdateProfile(c *gin.Context) {
 		"user":    user,
 	})
 }
+
+func GetProfile(c *gin.Context) {
+	userIDStr := c.Param("id")
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID format"})
+		return
+	}
+
+	var user model.User
+	if err := database.DB.First(&user, userID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to retrieve user"})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "User profile retrieved successfully",
+		"user":    user,
+	})
+}
