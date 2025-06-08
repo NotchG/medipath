@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medipath/pages/AuthPage/components/auth_text_field.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:medipath/controller/auth_controller.dart';
+import 'package:medipath/model/login_model.dart';
+import 'package:provider/provider.dart';
+import 'package:medipath/provider/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -9,6 +15,39 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  String email = "";
+  String password = "";
+
+  final AuthController _authController = AuthController();
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  void handleLogin() async {
+    if (email.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please enter both email and password.")),
+      );
+      return;
+    }
+
+    final request = LoginRequest(email: email, password: password);
+    final response = await _authController.login(request);
+
+    if (response != null) {
+      // Store both token and userId using the provider
+      await context.read<AuthProvider>().setAuthData(
+        token: response.token,
+        userId: response.id.toString(), // or just response.id if it's already a string
+      );
+      context.go('/');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Invalid email or password.")),
+      );
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,9 +89,12 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       SizedBox(height: 20),
                       AuthTextField(
-                        label: "Enter your username",
+                        label: "Enter your email",
                         onChanged: (text) {
                           // Handle username input
+                          setState(() {
+                            email = text;
+                          });
                         },
                       ),
                       SizedBox(height: 10),
@@ -60,6 +102,9 @@ class _LoginPageState extends State<LoginPage> {
                         label: "Enter your password",
                         onChanged: (text) {
                           // Handle username input
+                          setState(() {
+                            password = text;
+                          });
                         },
                         obscureText: true,
                       ),
@@ -67,6 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                       ElevatedButton(
                         onPressed: () {
                           // Handle login action
+                          handleLogin();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xffE0DD26),
@@ -96,22 +142,24 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   TextButton(
-                      onPressed: () {},
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Don't have an account? ",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                          children: [
-                            TextSpan(
-                              text: "Sign Up",
-                              style: TextStyle(
-                                color: Color(0xffE0DD26),
-                                fontWeight: FontWeight.bold,
-                              ),
+                    onPressed: () {
+                      context.go('/register');
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Don't have an account? ",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        children: [
+                          TextSpan(
+                            text: "Sign Up",
+                            style: TextStyle(
+                              color: Color(0xffE0DD26),
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
-                      )
+                          ),
+                        ],
+                      ),
+                    )
                   ),
                   SizedBox(height: 5),
                   Text(

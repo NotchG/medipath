@@ -3,31 +3,81 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medipath/pages/AuthPage/login_page.dart';
 import 'package:medipath/pages/AuthPage/register_page.dart';
+import 'package:medipath/pages/AuthPage/splash_screen.dart';
 import 'package:provider/provider.dart';
+import 'provider/auth_provider.dart'; // import your AuthProvider
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'nav_handler.dart'; // Your NavHandler from previous steps
-import 'package:medipath/pages/HomePage/home_page.dart';
-import 'package:medipath/pages/HomePage/article_page.dart';
-import 'package:medipath/pages/ChatBotPage/chatbot_page.dart';
-import 'package:medipath/pages/ChatDoctorPage/chat_doctor_home_page.dart';
-import 'package:medipath/pages/ChatDoctorPage/chat_doctor_by_specialty_page.dart';
-import 'package:medipath/model/article_model.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => NavHandler(),
-      child: const MyApp(),
+    Phoenix(
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AuthProvider()),
+          ChangeNotifierProvider(create: (_) => NavHandler()),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
+
+final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+final GoRouter _router = GoRouter(
+  initialLocation: '/splash',
+  routes: [
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginPage(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterPage(),
+    ),
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const MainApp(),
+    ),
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) => const SplashScreen(),
+    )
+  ],
+  redirect: (context, state) {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    // Wait for AuthProvider to finish loading before redirecting
+    if (authProvider.isLoading) {
+      return state.matchedLocation == '/splash' ? null : '/splash';
+    }
+
+    if (state.matchedLocation == '/splash') {
+      return null;
+    }
+    final isLoggingIn = state.matchedLocation == '/login' || state.matchedLocation == '/register';
+    final isLoggedIn = authProvider.isLoggedIn;
+
+    if (!isLoggedIn && !isLoggingIn) {
+      return '/login';
+    }
+    if (isLoggedIn && isLoggingIn) {
+      return '/';
+    }
+    return null;
+  },
+  refreshListenable: AuthProvider(), // Use your provider to trigger refresh
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const LoginPage(),
+    return MaterialApp.router(
+      routerConfig: _router,
       debugShowCheckedModeBanner: false,
     );
   }

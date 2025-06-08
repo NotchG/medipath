@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medipath/controller/get_articles_controller.dart';
+import 'package:medipath/controller/profile_controller.dart';
 import 'package:medipath/pages/HomePage/components/article_list_tile.dart';
 
 class HomePage extends StatefulWidget {
@@ -45,16 +46,6 @@ class _HomePageState extends State<HomePage> {
         padding: EdgeInsets.only(left: 15, right: 15),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        // decoration: BoxDecoration(
-        //     gradient: LinearGradient(
-        //       begin: Alignment.topCenter,
-        //       end: Alignment.bottomCenter,
-        //       colors: [
-        //         Color(0xffFDF3F2),
-        //         Color(0xffABB6DC)
-        //       ],
-        //     )
-        // ),
         child: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.only(bottom: 40),
@@ -77,14 +68,30 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         width: 20,
                       ),
-                      Text(
-                          "Welcome, Achmed Fidel\nLaki Laki | 36 Tahun\nTidak ada riwayat penyakit",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          )
-                      )
+                      FutureBuilder(
+                        future: ProfileController().fetchProfile(context),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState
+                              .waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          if (snapshot.hasError) {
+                            return Text("Error: ${snapshot.error}");
+                          }
+                          if (!snapshot.hasData || snapshot.data == null) {
+                            return Text("No profile data");
+                          }
+                          final userProfile = snapshot.data!;
+                          return Text(
+                              "Welcome, ${userProfile.fullName}\n${userProfile.gender ?? "No Gender"} | ${userProfile.dateOfBirth == null ? "-" : DateTime(DateTime.now().year - userProfile.dateOfBirth!.year,DateTime.now().month - userProfile.dateOfBirth!.month,DateTime.now().day - userProfile.dateOfBirth!.day).year} Tahun\nTidak ada riwayat penyakit",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              )
+                          );
+                        }
+                      ),
                     ],
                   ),
                 ),
@@ -123,11 +130,11 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(bottom: 20),
                       child: Text(
                           '''- Drink at least 8 cups of water daily.
-            - Prioritize 7–8 hours of sleep each night.
-            - Get moving: aim for at least 30 minutes of exercise most days.
-            - Choose fresh fruits and vegetables over processed foods.
-            - Manage stress through relaxation and mindfulness.
-            - Schedule regular health check-ups — early detection saves lives!''',
+- Prioritize 7–8 hours of sleep each night.
+- Get moving: aim for at least 30 minutes of exercise most days.
+- Choose fresh fruits and vegetables over processed foods.
+- Manage stress through relaxation and mindfulness.
+- Schedule regular health check-ups — early detection saves lives!''',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,

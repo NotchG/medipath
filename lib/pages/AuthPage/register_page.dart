@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:medipath/controller/register_controller.dart';
+import 'package:medipath/model/register_model.dart';
 import 'package:medipath/pages/AuthPage/components/auth_text_field.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -9,6 +12,46 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  String email = "";
+  String fullName = "";
+  String password = "";
+  String confirmPassword = "";
+
+  final RegisterController _registerController = RegisterController();
+
+  void handleRegister() async {
+    if (email.isEmpty || fullName.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Please fill all fields.")),
+      );
+      return;
+    }
+    if (password != confirmPassword) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Passwords do not match.")),
+      );
+      return;
+    }
+
+    final request = RegisterRequest(
+      fullName: fullName,
+      email: email,
+      password: password,
+    );
+    final response = await _registerController.register(request);
+
+    if (response != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registration successful! Please login.")),
+      );
+      context.go('/login');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Registration failed. Try again.")),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,37 +95,43 @@ class _RegisterPageState extends State<RegisterPage> {
                       AuthTextField(
                         label: "Enter your email",
                         onChanged: (text) {
-                          // Handle username input
+                          setState(() {
+                            email = text;
+                          });
                         },
                       ),
                       SizedBox(height: 10),
                       AuthTextField(
                         label: "Enter your username",
                         onChanged: (text) {
-                          // Handle username input
+                          setState(() {
+                            fullName = text;
+                          });
                         },
                       ),
                       SizedBox(height: 10),
                       AuthTextField(
                         label: "Enter your password",
                         onChanged: (text) {
-                          // Handle username input
+                          setState(() {
+                            password = text;
+                          });
                         },
                         obscureText: true,
                       ),
                       SizedBox(height: 10),
                       AuthTextField(
-                        label: "Enter your password",
+                        label: "Confirm your password",
                         onChanged: (text) {
-                          // Handle username input
+                          setState(() {
+                            confirmPassword = text;
+                          });
                         },
                         obscureText: true,
                       ),
                       SizedBox(height: 40),
                       ElevatedButton(
-                        onPressed: () {
-                          // Handle login action
-                        },
+                        onPressed: handleRegister,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xffE0DD26),
                           foregroundColor: Color(0xff44157D),
@@ -111,22 +160,24 @@ class _RegisterPageState extends State<RegisterPage> {
               child: Column(
                 children: [
                   TextButton(
-                      onPressed: () {},
-                      child: RichText(
-                        text: TextSpan(
-                          text: "Already have an account? ",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                          children: [
-                            TextSpan(
-                              text: "Login",
-                              style: TextStyle(
-                                color: Color(0xffE0DD26),
-                                fontWeight: FontWeight.bold,
-                              ),
+                    onPressed: () {
+                      context.go('/login');
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Already have an account? ",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        children: [
+                          TextSpan(
+                            text: "Login",
+                            style: TextStyle(
+                              color: Color(0xffE0DD26),
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        ),
-                      )
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                   SizedBox(height: 5),
                   Text(
