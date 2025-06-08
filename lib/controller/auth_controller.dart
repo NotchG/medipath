@@ -4,7 +4,7 @@ import '../model/login_model.dart';
 
 class AuthController {
   Future<LoginResponse?> login(LoginRequest request) async {
-    final url = Uri.parse('http://192.168.50.74:8080/api/login');
+    final url = Uri.parse('https://medipathapi.notchgnas.com/api/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},

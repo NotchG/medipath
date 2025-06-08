@@ -7,7 +7,7 @@ class GetArticlesController {
 
   Future<List<ArticleModel>> fetchArticles() async {
     final url = Uri.parse(
-      'https://api.worldnewsapi.com/search-news?text=Heart+OR+Lungs+OR+Liver+OR+Virus&number=10',
+      'https://api.worldnewsapi.com/search-news?text=Heart+OR+Lungs+OR+Liver+OR+Virus&number=5',
     );
     final response = await http.get(
         url,

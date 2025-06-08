@@ -4,7 +4,7 @@ import '../model/register_model.dart';
 
 class RegisterController {
   Future<RegisterResponse?> register(RegisterRequest request) async {
-    final url = Uri.parse('http://192.168.50.74:8080/api/register');
+    final url = Uri.parse('https://medipathapi.notchgnas.com/api/register');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
