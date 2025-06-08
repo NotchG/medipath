@@ -16,7 +16,6 @@ func main() {
 
 	router := gin.Default()
 
-	// Setup API routes
 	routes.SetupRoutes(router)
 
 	port := os.Getenv("PORT")

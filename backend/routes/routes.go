@@ -11,6 +11,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	// Auth
 	api.POST("/login", controller.Login)
+	api.POST("/register", controller.Register)
 
 	// Chat
 	api.POST("/chat", controller.ChatWithAI)

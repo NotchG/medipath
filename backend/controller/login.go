@@ -11,7 +11,7 @@ import (
 
 func Login(c *gin.Context) {
 	var req struct {
-		Username string `json:"username"`
+		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
 
@@ -21,7 +21,7 @@ func Login(c *gin.Context) {
 	}
 
 	var user model.User
-	if err := database.DB.Where("username = ?", req.Username).First(&user).Error; err != nil {
+	if err := database.DB.Where("email = ?", req.Email).First(&user).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return
 	}
@@ -32,10 +32,10 @@ func Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"token": "123e4567-e89b-12d3-a456-426614174000", // Replace with JWT generator
+		"token": "123e4567-e89b-12d3-a456-426614174000",
 		"user": gin.H{
-			"id":       user.ID,
-			"username": user.Username,
+			"id":    user.ID,
+			"email": user.Email,
 		},
 	})
 }
