@@ -38,7 +38,7 @@ class ProfileController {
 
     if (token == null || userId == null) return false;
 
-    final url = Uri.parse('http://192.168.50.74:8080/api/profile/$userId');
+    final url = Uri.parse('https://medipathapi.notchgnas.com/api/profile/$userId');
     final response = await http.put(
       url,
       headers: {
