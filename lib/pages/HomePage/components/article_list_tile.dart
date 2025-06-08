@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:medipath/model/article_model.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ArticleListTile extends StatelessWidget {
   final ArticleModel article;
   final VoidCallback onTap;
 
   const ArticleListTile({
-    Key? key,
+    super.key,
     required this.article,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.only(right: 20),
+        margin: EdgeInsets.only(bottom: 20),
         decoration: BoxDecoration(
-          color: Color(0xffFDF3F2),
+          color: Color(0xff44157D),
           borderRadius: BorderRadius.circular(20),
         ),
-        width: 300,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
             Container(
-              height: 200,
+              height: 100,
+              width: 100,
               decoration: BoxDecoration(
                 color: Colors.white,
                 image: DecorationImage(
@@ -36,30 +36,36 @@ class ArticleListTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    article.title ?? "Article Title",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      overflow: TextOverflow.ellipsis,
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  left: 10,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      article.title ?? "Article Title",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    article.content ?? "This is a brief description of the article content. It provides an overview of the main points discussed in the article.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff22577A),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  )
-                ],
+                    SizedBox(height: 5),
+                    Text(
+                      article.publishedDate != null ? timeago.format(article.publishedDate!) : "Unknown date",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  ],
+                ),
               ),
             )
           ],

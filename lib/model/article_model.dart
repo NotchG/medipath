@@ -19,12 +19,22 @@ class ArticleModel {
 
   // Factory method to create an instance from a map
   factory ArticleModel.fromMap(Map<String, dynamic> map) {
+    DateTime? parsedDate;
+    final dateStr = map['publish_date'];
+    if (dateStr != null && dateStr is String && dateStr.isNotEmpty) {
+      try {
+        parsedDate = DateTime.parse(dateStr);
+      } catch (_) {
+        parsedDate = null;
+      }
+    }
     return ArticleModel(
-      id: map['id'],
+      id: map['id'].toString(),
       title: map['title'],
-      content: map['content'],
-      description: map['description'],
-      imageUrl: map['urlToImage'],
+      content: map['summary'],
+      description: map['text'],
+      imageUrl: map['image'],
+      publishedDate: parsedDate,
     );
   }
 }

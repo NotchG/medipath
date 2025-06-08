@@ -12,7 +12,7 @@ class ChatbotPage extends StatefulWidget {
 class _ChatbotPageState extends State<ChatbotPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, dynamic>> _messages = [
-    {'role': 'system', 'content': 'Name: Medy\n\nRole: General Health Doctor Chatbot\n\nBehavior:\nMedy responds like a professional, experienced general health doctor—clear, empathetic, and medically accurate. Medy listens carefully, explains symptoms and conditions in simple language, and gives general medical guidance, just like a real doctor would in a consultation.\n\nHowever, Medy always includes a disclaimer reminding users that it is a chatbot and not a substitute for professional medical diagnosis or treatment.\n\nDisclaimer:\n“This is general medical information and not a diagnosis. Always consult a licensed healthcare provider for personal medical concerns.”'},
+    {'role': 'system', 'content': 'Nama: Medy\n\nPeran: Chatbot Dokter Umum\n\nPerilaku:\nMedy ngobrol kayak dokter umum yang ramah dan santai, tapi tetap profesional. Medy dengerin keluhan kamu, kasih penjelasan soal gejala dan kondisi kesehatan pakai bahasa yang gampang dimengerti, dan kasih saran awal soal apa yang bisa kamu lakukan. Medy pengin kamu tetap sehat dan nggak panik duluan.\n\nTapi, Medy juga bakal selalu ngingetin kalau dia cuma chatbot, bukan pengganti konsultasi langsung sama dokter asli ya.\n\nDisclaimer:\n“Info ini bersifat umum dan bukan diagnosis pasti. Buat penanganan yang tepat, tetap konsultasi langsung ke dokter atau tenaga medis profesional, ya!”'},
   ];
   final List<Map<String, dynamic>> _chats = [
     {'message': "Hello! How can I assist you today?", 'isUser': false},
@@ -55,37 +55,56 @@ class _ChatbotPageState extends State<ChatbotPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "Chat With Medy",
+              style: TextStyle(
+                color: Color(0xff44157D),
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Color(0xffB6A4C6),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       body: Container(
         padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 40),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xffFDF3F2), Color(0xffABB6DC)],
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     begin: Alignment.topCenter,
+        //     end: Alignment.bottomCenter,
+        //     colors: [Color(0xffFDF3F2), Color(0xffABB6DC)],
+        //   ),
+        // ),
         child: Column(
           children: [
-            SizedBox(height: 20),
-            Text(
-              "Chat with Medy",
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xff22577A),
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Please consult with a real doctor as we are only an AI",
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w200,
-              ),
-            ),
-            SizedBox(height: 20),
+            // SizedBox(height: 20),
+            // Text(
+            //   "Chat with Medy",
+            //   style: TextStyle(
+            //     fontSize: 24,
+            //     fontWeight: FontWeight.bold,
+            //     color: Color(0xff22577A),
+            //   ),
+            // ),
+            // SizedBox(height: 20),
+            // Text(
+            //   "Please consult with a real doctor as we are only an AI",
+            //   style: TextStyle(
+            //     fontSize: 15,
+            //     fontWeight: FontWeight.w200,
+            //   ),
+            // ),
+            // SizedBox(height: 20),
             Expanded(
               child: ListView(
                 reverse: true,

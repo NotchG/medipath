@@ -16,7 +16,7 @@ class ChatBotController {
   }
 
   Future<ChatCompletionResponse?> fetchGroqCompletion(List<Map<String, dynamic>> messages) async {
-    const apiKey = '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';
+    const apiKey = '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';
     final url = Uri.parse('https://api.groq.com/openai/v1/chat/completions');
     final headers = {
       'Content-Type': 'application/json',

@@ -17,68 +17,53 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "MediPath",
+              style: TextStyle(
+                color: Color(0xff44157D),
+                fontSize: 24,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Icon(
+              Icons.person,
+              color: Colors.black,
+              size: 24,
+            )
+          ],
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
       body: Container(
-        padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+        padding: EdgeInsets.only(left: 15, right: 15),
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xffFDF3F2),
-                Color(0xffABB6DC)
-              ],
-            )
-        ),
+        // decoration: BoxDecoration(
+        //     gradient: LinearGradient(
+        //       begin: Alignment.topCenter,
+        //       end: Alignment.bottomCenter,
+        //       colors: [
+        //         Color(0xffFDF3F2),
+        //         Color(0xffABB6DC)
+        //       ],
+        //     )
+        // ),
         child: SingleChildScrollView(
           child: Container(
             margin: EdgeInsets.only(bottom: 40),
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          color: Color(0xff22577A),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          "Achmed Fidel",
-                          style: TextStyle(
-                            color: Color(0xff22577A)
-                          ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                            "Jalan Triman, Be...",
-                          style: TextStyle(
-                              color: Color(0xff22577A)
-                          ),
-                        ),
-                        Icon(
-                          Icons.location_on_rounded,
-                          color: Color(0xff22577A),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
                 Container(
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Color(0xffABB6DC),
+                    color: Color(0xff44157D),
                     borderRadius: BorderRadius.all(Radius.circular(20))
                   ),
                   child: Row(
@@ -87,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Icon(
                         Icons.person,
-                        color: Color(0xff22577A),
+                        color: Colors.white,
                       ),
                       SizedBox(
                         width: 20,
@@ -95,7 +80,7 @@ class _HomePageState extends State<HomePage> {
                       Text(
                           "Welcome, Achmed Fidel\nLaki Laki | 36 Tahun\nTidak ada riwayat penyakit",
                           style: TextStyle(
-                            color: Color(0xff22577A),
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           )
@@ -107,35 +92,32 @@ class _HomePageState extends State<HomePage> {
                   height: 20,
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              "Early Detection, Better Protection",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              "Stay Informed, Stay Healthy!",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            )
-                          ],
-                        ),
-                        Expanded(
-                          child: Image(
-                              image: Image.asset("images/HomePage/heart.png").image,
-                              width: 200,
-                          ),
-                        ),
-                      ],
+                    Image(
+                      image: Image.asset("assets/images/HomePage/heart.png").image,
+                      width: 150,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "Stay Informed, Stay Healthy!",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w400,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      "Early Detection, Better Protection",
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     showMore ? Padding(
                       padding: const EdgeInsets.only(bottom: 20),
@@ -154,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                     ) : SizedBox.shrink(),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff2D3568),
+                          backgroundColor: Color(0xffE0DD26),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -168,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                         child: Text(
                           showMore ? "Show Less" : "Show More",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
                           ),
@@ -204,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                       height: 20,
                     ),
                     Container(
-                      height: 320,
+                      height: MediaQuery.of(context).size.height - 300,
                       child: FutureBuilder(
                         future: GetArticlesController().fetchArticles(),
                         builder: (context, snapshot) {
@@ -219,17 +201,20 @@ class _HomePageState extends State<HomePage> {
                           }
                           final articles = snapshot.data!;
                           return ListView.builder(
-                            scrollDirection: Axis.horizontal,
+                            scrollDirection: Axis.vertical,
                             itemCount: articles.length,
                             itemBuilder: (context, index) {
                               final article = articles[index];
                               return ArticleListTile(
                                 article: article,
                                 onTap: () {
-                                  context.goNamed(
-                                    'article',
-                                    extra: article,
-                                  );
+                                  print('Tapped: ${article.title}');
+                                  try {
+                                    context.goNamed('article', extra: article);
+                                    print('Navigation called');
+                                  } catch (e) {
+                                    print('Navigation error: $e');
+                                  }
                                 },
                               );
                             },

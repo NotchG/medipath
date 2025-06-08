@@ -1,118 +1,107 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:medipath/model/article_model.dart';
-import 'package:medipath/pages/ChatBotPage/chatbot_page.dart';
-import 'package:medipath/pages/ChatDoctorPage/chat_doctor_by_specialty_page.dart';
-import 'package:medipath/pages/ChatDoctorPage/chat_doctor_home_page.dart';
-import 'package:medipath/pages/HomePage/article_page.dart';
+import 'package:medipath/pages/AuthPage/login_page.dart';
+import 'package:medipath/pages/AuthPage/register_page.dart';
+import 'package:provider/provider.dart';
+
+import 'nav_handler.dart'; // Your NavHandler from previous steps
 import 'package:medipath/pages/HomePage/home_page.dart';
+import 'package:medipath/pages/HomePage/article_page.dart';
+import 'package:medipath/pages/ChatBotPage/chatbot_page.dart';
+import 'package:medipath/pages/ChatDoctorPage/chat_doctor_home_page.dart';
+import 'package:medipath/pages/ChatDoctorPage/chat_doctor_by_specialty_page.dart';
+import 'package:medipath/model/article_model.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => NavHandler(),
+      child: const MyApp(),
+    ),
+  );
 }
 
-final GoRouter _router = GoRouter(
-  initialLocation: '/home',
-  routes: [
-    ShellRoute(
-      builder: (context, state, child) => MainApp(child: child),
-      routes: [
-        GoRoute(
-          path: '/home',
-          builder: (context, state) => const HomePage(),
-        ),
-        GoRoute(
-          path: '/chatbot',
-          builder: (context, state) => const ChatbotPage(),
-        ),
-        GoRoute(
-          path: '/chatdoctor',
-          name: 'chatdoctor',
-          builder: (context, state) => const ChatDoctorHomePage()
-        ),
-        GoRoute(
-          path: '/chatdoctor/:specialty',
-          name: 'chatdoctorspecialty',
-          builder: (context, state) {
-            final specialty = state.pathParameters['specialty'];
-            return ChatDoctorBySpecialtyPage(specialtyName: specialty ?? 'General Practitioner');
-          },
-        ),
-        GoRoute(
-          path: '/home/article',
-          name: 'article',
-          builder: (context, state) {
-            ArticleModel? article = state.extra as ArticleModel?;
-            return ArticlePage(article: article);
-          }
-        )
-        // Add more GoRoute for other tabs/pages here
-      ],
-    ),
-  ],
-);
-
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
+    return MaterialApp(
+      home: const LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MainApp extends StatefulWidget {
-  final Widget child;
-  const MainApp({super.key, required this.child});
-
-  @override
-  State<MainApp> createState() => _MainAppState();
-}
-
-class _MainAppState extends State<MainApp> {
-  int get selectedIndex {
-    final location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/home')) return 0;
-    // Add more index checks for other tabs
-    return 0;
-  }
-
-  void _onTabTapped(int index) {
-    switch (index) {
-      case 0:
-        context.go('/home');
-        break;
-      case 1:
-        context.go('/chatbot');
-        break;
-      case 2:
-        context.go('/chatdoctor');
-        break;
-    // Add more cases for other tabs
-    }
-  }
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final navHandler = context.watch<NavHandler>();
+    final currentIndex = navHandler.currentTabIndex;
+
     return Scaffold(
-      body: widget.child,
+      body: IndexedStack(
+        index: currentIndex,
+        children: List.generate(
+          navHandler.tabInfos.length,
+          (index) => ActiveTabWrapper(
+            isActive: currentIndex == index,
+            child: Router(
+              routerDelegate: navHandler.tabInfos[index].router.routerDelegate,
+              routeInformationParser: navHandler.tabInfos[index].router.routeInformationParser,
+              routeInformationProvider: navHandler.tabInfos[index].router.routeInformationProvider,
+            ),
+          ),
+        ),
+      ),
       bottomNavigationBar: ConvexAppBar(
-        items: [
-          TabItem(icon: Icons.home_filled),
-          TabItem(icon: Icons.chat_bubble_rounded),
-          TabItem(icon: Icons.history_rounded),
-          TabItem(icon: Icons.person),
-        ],
-        color: const Color(0xff2D3568),
-        activeColor: const Color(0xff2D3568),
-        backgroundColor: const Color(0xff7A87C2),
-        curveSize: 100,
+        activeColor: Color(0xff44157D),
+        backgroundColor: Color(0xffB6A4C6),
+        color: Color(0xff44157D),
         style: TabStyle.react,
-        height: 70,
-        initialActiveIndex: selectedIndex,
-        onTap: _onTabTapped,
+        items: const [
+          TabItem(
+              icon: Icons.home_filled
+          ),
+          TabItem(
+              icon: Icons.chat_bubble_rounded
+          ),
+          TabItem(
+              icon: Icons.local_hospital_rounded
+          ),
+          TabItem(
+              icon: Icons.person
+          ),
+        ],
+        initialActiveIndex: currentIndex,
+        onTap: (index) => navHandler.currentTabIndex = index,
+      ),
+    );
+  }
+}
+
+class ActiveTabWrapper extends StatelessWidget {
+  const ActiveTabWrapper({
+    Key? key,
+    required this.child,
+    required this.isActive,
+  }) : super(key: key);
+
+  final Widget child;
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return HeroMode(
+      enabled: isActive,
+      child: Offstage(
+        offstage: !isActive,
+        child: TickerMode(
+          enabled: isActive,
+          child: child,
+        ),
       ),
     );
   }
