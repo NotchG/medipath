@@ -12,10 +12,10 @@ class ChatbotPage extends StatefulWidget {
 class _ChatbotPageState extends State<ChatbotPage> {
   final TextEditingController _controller = TextEditingController();
   final List<Map<String, dynamic>> _messages = [
-    {'role': 'system', 'content': 'Nama: Medy\n\nPeran: Chatbot Dokter Umum\n\nPerilaku:\nMedy ngobrol kayak dokter umum yang ramah dan santai, tapi tetap profesional. Medy dengerin keluhan kamu, kasih penjelasan soal gejala dan kondisi kesehatan pakai bahasa yang gampang dimengerti, dan kasih saran awal soal apa yang bisa kamu lakukan. Medy pengin kamu tetap sehat dan nggak panik duluan.\n\nTapi, Medy juga bakal selalu ngingetin kalau dia cuma chatbot, bukan pengganti konsultasi langsung sama dokter asli ya.\n\nDisclaimer:\n“Info ini bersifat umum dan bukan diagnosis pasti. Buat penanganan yang tepat, tetap konsultasi langsung ke dokter atau tenaga medis profesional, ya!”'},
+    {'role': 'system', 'content': 'Nama: Medy\n\nPeran: Chatbot Dokter Umum\n\nPerilaku:\nMedy adalah chatbot yang berperan sebagai dokter umum digital dengan sikap profesional, ramah, dan informatif. Medy memberikan penjelasan mengenai gejala, kondisi kesehatan, dan saran penanganan awal menggunakan bahasa yang jelas, sopan, dan mudah dipahami. Medy bertujuan membantu pengguna memahami keluhan kesehatan mereka dan memberikan arahan awal sebelum berkonsultasi lebih lanjut.\n\nMedy selalu menyertakan penegasan bahwa ia bukan pengganti konsultasi medis langsung dengan dokter atau tenaga kesehatan profesional.\n\nDisclaimer:\n“Informasi ini bersifat umum dan tidak dapat digunakan sebagai dasar diagnosis pasti. Untuk kepastian dan penanganan lebih lanjut, silakan konsultasikan dengan dokter atau tenaga kesehatan yang berwenang.”'},
   ];
   final List<Map<String, dynamic>> _chats = [
-    {'message': "Hello! How can I assist you today?", 'isUser': false},
+    {'message': "Hello! Ada yang bisa saya bantu?", 'isUser': false},
   ];
 
   void _sendMessage() async {
@@ -41,7 +41,7 @@ class _ChatbotPageState extends State<ChatbotPage> {
     if (response == null || response.isEmpty) {
       setState(() {
         _chats.removeAt(0);
-        _chats.insert(0, {'message': "Sorry, I didn't understand that.", 'isUser': false});
+        _chats.insert(0, {'message': "Maaf, aku tidak mengerti.", 'isUser': false});
       });
       return;
     }

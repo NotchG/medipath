@@ -93,19 +93,19 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                       SizedBox(height: 20),
                       AuthTextField(
-                        label: "Enter your email",
+                        label: "Enter your Full Name",
                         onChanged: (text) {
                           setState(() {
-                            email = text;
+                            fullName = text;
                           });
                         },
                       ),
                       SizedBox(height: 10),
                       AuthTextField(
-                        label: "Enter your username",
+                        label: "Enter your email",
                         onChanged: (text) {
                           setState(() {
-                            fullName = text;
+                            email = text;
                           });
                         },
                       ),
