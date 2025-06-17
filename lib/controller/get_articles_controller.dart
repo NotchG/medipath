@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../model/article_model.dart';
 
 class GetArticlesController {
-  final String apiKey = 'd8a8ee3d0d434a3e8dc213090d3ebf27'; // Replace with your NewsAPI key
+  final String apiKey = dotenv.get("ARTICLE_API_KEY"); // Replace with your NewsAPI key
 
   Future<List<ArticleModel>> fetchArticles() async {
     final url = Uri.parse(

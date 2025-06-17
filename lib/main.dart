@@ -1,5 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medipath/pages/AuthPage/login_page.dart';
 import 'package:medipath/pages/AuthPage/register_page.dart';
@@ -11,7 +12,8 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 import 'nav_handler.dart'; // Your NavHandler from previous steps
 
-void main() {
+Future main() async {
+  await dotenv.load(fileName: ".env");
   runApp(
     Phoenix(
       child: MultiProvider(
